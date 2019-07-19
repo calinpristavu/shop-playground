@@ -8,8 +8,8 @@ use App\Entity\Product\Product;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
-use Sylius\Component\Product\Model\ProductInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SellerController extends AbstractController
 {
@@ -27,7 +27,7 @@ class SellerController extends AbstractController
     public function createProduct(
         ProductFactoryInterface $productFactory,
         ProductRepositoryInterface $productRepo
-    ) {
+    ): RedirectResponse {
         /** @var Product $product */
         $product = $productFactory->createNew();
 
