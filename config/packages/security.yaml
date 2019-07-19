@@ -69,7 +69,7 @@ security:
                 login_path: sylius_seller_login
                 check_path: sylius_seller_login_check
                 failure_path: sylius_seller_login
-                default_target_path: sylius_seller_homepage
+                default_target_path: app_seller_dashboard
                 use_forward: false
                 use_referer: true
                 csrf_token_generator: security.csrf.token_manager

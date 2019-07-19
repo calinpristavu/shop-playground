@@ -1,10 +1,14 @@
-app_seller_index:
-    path: /seller/home
+app_seller_dashboard:
+    path: /seller/dashboard
     methods: [GET]
     defaults:
-        _controller: 'App\Controller\SellerController::index'
-        _sylius:
-            template: "seller_index.html.twig"
+        _controller: 'App\Controller\SellerController::dashboard'
+
+app_seller_add_random_product:
+    path: /seller/add-random-product
+    methods: [GET]
+    defaults:
+        _controller: 'App\Controller\SellerController::createProduct'
 
 ### SECURITY ###
 sylius_seller_login:

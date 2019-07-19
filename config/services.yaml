@@ -28,6 +28,7 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+### SECURITY
     sylius.seller_user_provider.username_based:
         class: Sylius\Bundle\UserBundle\Provider\UsernameProvider
         autowire: false
@@ -66,3 +67,9 @@ services:
         class: App\Fixture\Factory\SellerUserExampleFactory
         arguments:
             - '@sylius.factory.seller_user'
+            - ProductFactoryInterface
+### /SECURITY
+
+### Aliased interfaces from sylius
+    Sylius\Component\Core\Repository\ProductRepositoryInterface: "@sylius.repository.product"
+    Sylius\Component\Product\Factory\ProductFactoryInterface: '@sylius.factory.product'
