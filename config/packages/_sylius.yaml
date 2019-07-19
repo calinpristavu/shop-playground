@@ -60,6 +60,7 @@ sylius_channel:
         channel:
             classes:
                 model: App\Entity\Channel\Channel
+
 sylius_core:
     resources:
         product_image:
@@ -228,6 +229,7 @@ sylius_taxonomy:
             translation:
                 classes:
                     model: App\Entity\Taxonomy\TaxonTranslation
+
 sylius_user:
     resources:
         admin:
@@ -238,6 +240,11 @@ sylius_user:
             user:
                 classes:
                     model: App\Entity\User\ShopUser
+        seller:
+            user:
+                classes:
+                    model: App\Entity\User\SellerUser
+                    repository: App\Repository\SellerUserRepository
         oauth:
             user:
                 classes:
@@ -252,3 +259,18 @@ sylius_theme:
         filesystem:
             directories:
                 - "%kernel.project_dir%/themes"
+
+sylius_fixtures:
+    suites:
+        seller:
+            fixtures:
+                seller_user:
+                    name: "seller_user"
+                    options:
+                        random: 20
+                        custom:
+                            -   
+                                email: "seller@example.com"
+                                first_name: "Seller"
+                                last_name: "Doe"
+                                password: "sylius"

@@ -20,10 +20,49 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{Entity,Migrations,Tests,Fixture,Kernel.php}'
 
     # Controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    sylius.seller_user_provider.username_based:
+        class: Sylius\Bundle\UserBundle\Provider\UsernameProvider
+        autowire: false
+        autoconfigure: false
+        public: false
+        parent: 'sylius.seller_user_provider'
+
+    sylius.seller_user_provider:
+        class: Sylius\Bundle\UserBundle\Provider\AbstractUserProvider
+        abstract: true
+        lazy: true
+        arguments:
+            - 'App\Entity\User\SellerUser'
+            - '@sylius.repository.seller_user'
+            - '@sylius.canonicalizer'
+
+    sylius.handler.seller_user_logout:
+        class: App\EventListener\SellerUserLogoutHandler
+        arguments:
+            - '@security.http_utils'
+            - '/'
+            - '@sylius.context.channel.composite'
+            - '@sylius.storage.cart_session'
+
+    app.fixture.seller_user:
+        autowire: false
+        class: App\Fixture\SellerUserFixture
+        arguments:
+            - '@sylius.manager.seller_user'
+            - '@app.fixture.example_factory.seller_user'
+        tags:
+            - {name: sylius_fixtures.fixture}
+
+    app.fixture.example_factory.seller_user:
+        autowire: false
+        class: App\Fixture\Factory\SellerUserExampleFactory
+        arguments:
+            - '@sylius.factory.seller_user'
