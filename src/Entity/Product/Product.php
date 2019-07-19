@@ -4,19 +4,39 @@ declare(strict_types=1);
 
 namespace App\Entity\Product;
 
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Table;
+use App\Entity\User\SellerUser;
+use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Product as BaseProduct;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
 
 /**
- * @Entity
- * @Table(name="sylius_product")
+ * @ORM\Entity
+ * @ORM\Table(name="sylius_product")
  */
 class Product extends BaseProduct
 {
+    /**
+     * @var SellerUser
+     *
+     * @ORM\ManyToOne(targetEntity="\App\Entity\User\SellerUser", inversedBy="soldProducts")
+     * @ORM\JoinColumn(name="seller_id", referencedColumnName="id")
+     */
+    private $seller;
+
     protected function createTranslation(): ProductTranslationInterface
     {
         return new ProductTranslation();
+    }
+
+    public function getSeller(): SellerUser
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(SellerUser $seller): self
+    {
+        $this->seller = $seller;
+
+        return $this;
     }
 }
