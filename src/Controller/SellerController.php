@@ -6,10 +6,13 @@ namespace App\Controller;
 
 use App\Entity\Product\Product;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sylius\Bundle\ProductBundle\Form\Type\ProductType;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class SellerController extends AbstractController
 {
@@ -17,34 +20,26 @@ class SellerController extends AbstractController
      * @Template("seller_dashboard.html.twig")
      */
     public function dashboard(
-        ProductRepositoryInterface $productRepo
-    ): array {
-        return [
-            'products' => $productRepo->findBy(['seller' => $this->getUser()])
-        ];
-    }
-
-    public function createProduct(
-        ProductFactoryInterface $productFactory,
-        ProductRepositoryInterface $productRepo
-    ): RedirectResponse {
+        Request $request,
+        ProductRepositoryInterface $productRepo,
+        FormFactoryInterface $formFactory,
+        ProductFactoryInterface $productFactory
+    ) {
         /** @var Product $product */
         $product = $productFactory->createNew();
 
-        $user = $this->getUser();
-        $dateTime = new \DateTime();
-        $product->setName(sprintf(
-            'created by %s at %s',
-            $user->getUsername(),
-            $dateTime->format('c')
-        ));
-        $product->setCode((string) $dateTime->getTimestamp());
-        $product->setSlug((string) $dateTime->getTimestamp());
+        $form = $formFactory->create(ProductType::class, $product);
+        $form->handleRequest($request);
 
-        $product->setSeller($this->getUser());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $productRepo->add($product);
 
-        $productRepo->add($product);
+            return $this->redirectToRoute('app_seller_dashboard');
+        }
 
-        return $this->redirectToRoute('app_seller_dashboard');
+        return [
+            'form' => $form->createView(),
+            'products' => $productRepo->findBy(['seller' => $this->getUser()])
+        ];
     }
 }
