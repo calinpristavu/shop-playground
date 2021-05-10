@@ -28,7 +28,7 @@
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglifycss": "^1.0.5",
-    "lodash": "~4.17.15",
+    "lodash": "~4.17.21",
     "merge-stream": "^1.0.0",
     "rollup": "^0.60.7",
     "rollup-plugin-babel": "^3.0.4",
